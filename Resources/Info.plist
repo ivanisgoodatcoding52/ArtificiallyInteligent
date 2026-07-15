@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleName</key>
+	<string>Artificially Inteligent</string>
+	<key>CFBundleDisplayName</key>
+	<string>Artificially Inteligent</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.yourname.artificiallyinteligent</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
+	<key>CFBundleIconFiles</key>
+	<array>
+		<string>Icon.png</string>
+		<string>Icon@2x.png</string>
+		<string>Icon-72.png</string>
+		<string>Icon-Flat.png</string>
+		<string>Icon-Flat@2x.png</string>
+		<string>Icon-Flat-72@2x.png</string>
+	</array>
+	<key>NSHumanReadableCopyright</key>
+	<string>Free to use and modify.</string>
+</dict>
+</plist>

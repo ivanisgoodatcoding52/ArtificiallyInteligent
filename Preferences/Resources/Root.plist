@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>title</key>
+	<string>Artificially Inteligent</string>
+	<key>specifiers</key>
+	<array>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>AI Provider</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>label</key>
+			<string>Provider</string>
+			<key>key</key>
+			<string>AIActiveProviderType</string>
+			<key>PostNotification</key>
+			<string>AISettingsDidChangeNotification</string>
+			<key>default</key>
+			<integer>0</integer>
+			<key>ValidTitles</key>
+			<array>
+				<string>OpenAI Compatible</string>
+				<string>Ollama</string>
+				<string>VoidAI</string>
+				<string>Custom API</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+				<integer>3</integer>
+			</array>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Configuration</string>
+			<key>footerText</key>
+			<string>For Ollama, use your server's base URL, e.g. http://192.168.1.100:11434 - the /api/chat path is appended automatically.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>label</key>
+			<string>API URL</string>
+			<key>key</key>
+			<string>AIApiURL</string>
+			<key>PostNotification</key>
+			<string>AISettingsDidChangeNotification</string>
+			<key>default</key>
+			<string></string>
+			<key>KeyboardType</key>
+			<string>URL</string>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSecureEditTextCell</string>
+			<key>label</key>
+			<string>API Key</string>
+			<key>key</key>
+			<string>AIApiKey</string>
+			<key>PostNotification</key>
+			<string>AISettingsDidChangeNotification</string>
+			<key>default</key>
+			<string></string>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>label</key>
+			<string>Model</string>
+			<key>key</key>
+			<string>AIModelName</string>
+			<key>PostNotification</key>
+			<string>AISettingsDidChangeNotification</string>
+			<key>default</key>
+			<string>gpt-3.5-turbo</string>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>label</key>
+			<string>Temperature</string>
+			<key>key</key>
+			<string>AITemperature</string>
+			<key>PostNotification</key>
+			<string>AISettingsDidChangeNotification</string>
+			<key>default</key>
+			<real>0.7</real>
+			<key>min</key>
+			<real>0.0</real>
+			<key>max</key>
+			<real>2.0</real>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>label</key>
+			<string>Max Tokens</string>
+			<key>key</key>
+			<string>AIMaxTokens</string>
+			<key>PostNotification</key>
+			<string>AISettingsDidChangeNotification</string>
+			<key>default</key>
+			<integer>512</integer>
+			<key>KeyboardType</key>
+			<string>NumberPad</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Advanced</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>label</key>
+			<string>System Prompt</string>
+			<key>key</key>
+			<string>AISystemPrompt</string>
+			<key>PostNotification</key>
+			<string>AISettingsDidChangeNotification</string>
+			<key>default</key>
+			<string>You are a helpful assistant.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>label</key>
+			<string>Request Timeout (sec)</string>
+			<key>key</key>
+			<string>AIRequestTimeout</string>
+			<key>PostNotification</key>
+			<string>AISettingsDidChangeNotification</string>
+			<key>default</key>
+			<integer>30</integer>
+			<key>KeyboardType</key>
+			<string>NumberPad</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>label</key>
+			<string>Streaming Responses</string>
+			<key>key</key>
+			<string>AIStreamingEnabled</string>
+			<key>PostNotification</key>
+			<string>AISettingsDidChangeNotification</string>
+			<key>default</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>label</key>
+			<string>Save Chat History</string>
+			<key>key</key>
+			<string>AISaveHistoryEnabled</string>
+			<key>PostNotification</key>
+			<string>AISettingsDidChangeNotification</string>
+			<key>default</key>
+			<true/>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Custom Provider (used when Provider = Custom API)</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>label</key>
+			<string>Provider Name</string>
+			<key>key</key>
+			<string>AIGenericProviderName</string>
+			<key>PostNotification</key>
+			<string>AISettingsDidChangeNotification</string>
+			<key>default</key>
+			<string>Custom Provider</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>label</key>
+			<string>Auth Header Name</string>
+			<key>key</key>
+			<string>AIGenericAuthHeaderName</string>
+			<key>PostNotification</key>
+			<string>AISettingsDidChangeNotification</string>
+			<key>default</key>
+			<string>Authorization</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>label</key>
+			<string>Auth Header Format</string>
+			<key>key</key>
+			<string>AIGenericAuthHeaderFormat</string>
+			<key>PostNotification</key>
+			<string>AISettingsDidChangeNotification</string>
+			<key>default</key>
+			<string>Bearer %@</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>label</key>
+			<string>Request Template (JSON)</string>
+			<key>key</key>
+			<string>AIGenericRequestTemplate</string>
+			<key>PostNotification</key>
+			<string>AISettingsDidChangeNotification</string>
+			<key>default</key>
+			<string></string>
+			<key>footerText</key>
+			<string>Placeholders: {{message}}, {{history}}, {{model}}, {{system}}. Leave blank to use a default OpenAI-shaped body.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>label</key>
+			<string>Response Path</string>
+			<key>key</key>
+			<string>AIGenericResponsePath</string>
+			<key>PostNotification</key>
+			<string>AISettingsDidChangeNotification</string>
+			<key>default</key>
+			<string>choices.0.message.content</string>
+			<key>footerText</key>
+			<string>Dot-notation path to the reply text in the JSON response, e.g. choices.0.message.content</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Data</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Clear Stored Data</string>
+			<key>action</key>
+			<string>clearStoredData</string>
+			<key>isDestructive</key>
+			<true/>
+		</dict>
+
+	</array>
+</dict>
+</plist>
