@@ -7,10 +7,18 @@
 #import <objc/runtime.h>
 
 BOOL AIIsIOS7OrLater(void) {
-    return floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1;
+    // Avoid NSFoundationVersionNumber_iOS_* constants entirely: some
+    // repackaged/community Theos SDKs don't define every point-release
+    // constant (e.g. _iOS_6_1 may be missing even though the SDK itself is
+    // 6.1), which is a hard compile error rather than a runtime issue.
+    // Comparing the live systemVersion string is portable across every SDK.
+    return [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0;
 }
 
 BOOL AIIsIOS8OrLater(void) {
+    // Safe to call regardless of base SDK: NSClassFromString always exists
+    // in Foundation, and comparing the returned Class to nil never requires
+    // the class itself to be declared at compile time.
     return NSClassFromString(@"UIAlertController") != nil;
 }
 
@@ -63,27 +71,13 @@ void AIPresentConfirm(UIViewController *presenter,
                        NSString *confirmTitle,
                        BOOL destructive,
                        AIConfirmHandler handler) {
-    if (AIIsIOS8OrLater()) {
-        Class alertControllerClass = NSClassFromString(@"UIAlertController");
-        UIAlertController *alert = [alertControllerClass alertControllerWithTitle:title
-                                                                            message:message
-                                                                     preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertActionStyle style = destructive ? UIAlertActionStyleDestructive : UIAlertActionStyleDefault;
-        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
-                                                    style:UIAlertActionStyleCancel
-                                                  handler:^(UIAlertAction *action) {
-            if (handler) handler(NO);
-        }]];
-        [alert addAction:[UIAlertAction actionWithTitle:confirmTitle
-                                                    style:style
-                                                  handler:^(UIAlertAction *action) {
-            if (handler) handler(YES);
-        }]];
-        [presenter presentViewController:alert animated:YES completion:nil];
-        return;
-    }
-
-    // iOS 3-7 fallback: UIActionSheet reads naturally as a confirm sheet.
+    // UIActionSheet is deprecated starting iOS 8 but remains fully functional
+    // through iOS 10 (the newest OS this tweak targets), and its class is
+    // declared in every SDK back to iOS 2. Using it universally avoids
+    // depending on UIAlertController/UIAlertAction, which this project's
+    // base SDK (as old as ~6.1 for the armv6/armv7 slices) does not declare
+    // at all -- referencing those types directly is a hard compile error
+    // here, not just a deprecation warning.
     AILegacyDialogShim *shim = [[AILegacyDialogShim alloc] init];
     shim.handler = handler;
 
@@ -101,16 +95,8 @@ void AIPresentConfirm(UIViewController *presenter,
 }
 
 void AIPresentAlert(UIViewController *presenter, NSString *title, NSString *message) {
-    if (AIIsIOS8OrLater()) {
-        Class alertControllerClass = NSClassFromString(@"UIAlertController");
-        UIAlertController *alert = [alertControllerClass alertControllerWithTitle:title
-                                                                            message:message
-                                                                     preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
-        [presenter presentViewController:alert animated:YES completion:nil];
-        return;
-    }
-
+    // Same reasoning as AIPresentConfirm above: UIAlertView universally,
+    // no UIAlertController branch.
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
                                                           message:message
                                                          delegate:nil

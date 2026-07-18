@@ -127,7 +127,9 @@
 
     if (AIHasNSURLSession()) {
         Class sessionClass = NSClassFromString(@"NSURLSession");
-        id session = [sessionClass sessionWithConfiguration:[sessionClass performSelector:@selector(defaultSessionConfiguration)]];
+        Class configClass = NSClassFromString(@"NSURLSessionConfiguration");
+        id configuration = configClass ? [configClass performSelector:@selector(defaultSessionConfiguration)] : nil;
+        id session = [sessionClass performSelector:@selector(sessionWithConfiguration:) withObject:configuration];
         id task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             handleResult(data, response, error);
         }];

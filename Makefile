@@ -21,7 +21,7 @@ ArtificiallyInteligent_FILES = Tweak.xm \
 	Classes/AISettingsManager.m \
 	Classes/AIConversationStore.m
 
-ArtificiallyInteligent_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
+ArtificiallyInteligent_CFLAGS = -fobjc-arc -Wno-deprecated-declarations -Wno-arc-performSelector-leaks
 ArtificiallyInteligent_FRAMEWORKS = UIKit Foundation CoreGraphics SystemConfiguration
 ArtificiallyInteligent_WEAK_FRAMEWORKS = AVFoundation Security
 

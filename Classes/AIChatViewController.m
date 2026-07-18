@@ -17,7 +17,6 @@ static NSString * const kLoadingCellIdentifier = @"AILoadingCell";
 @property (nonatomic, strong) UIToolbar *inputBar;
 @property (nonatomic, strong) UITextField *inputField;
 @property (nonatomic, strong) UIButton *sendButton;
-@property (nonatomic, strong) NSLayoutConstraint *inputBarBottomConstraint; // used on iOS7+ Auto Layout path only
 
 @property (nonatomic, assign) CGFloat inputBarHeight;
 @property (nonatomic, assign) BOOL isWaitingForReply;

@@ -16,10 +16,15 @@
 
 // ---- OS version helpers ----------------------------------------------
 
-// Returns YES on iOS 7.0 and later (flat UI, UIAlertController, etc.)
+// Returns YES on iOS 7.0 and later (flat UI colors etc.)
 BOOL AIIsIOS7OrLater(void);
 
-// Returns YES on iOS 8.0 and later (UIAlertController fully replaces UIActionSheet/UIAlertView)
+// Returns YES on iOS 8.0 and later. Note: AIPresentConfirm/AIPresentAlert
+// deliberately do NOT branch on this to use UIAlertController, because this
+// project builds against older base SDKs (down to ~6.1) that don't declare
+// UIAlertController/UIAlertAction at all. UIActionSheet/UIAlertView remain
+// fully functional through iOS 10, so we use them universally instead of
+// juggling forward-declared iOS8+ symbols across mixed-SDK arch slices.
 BOOL AIIsIOS8OrLater(void);
 
 // Returns YES if NSURLSession is available (iOS 7+) — otherwise callers
@@ -35,9 +40,9 @@ BOOL AIIsArm64(void);
 
 // ---- Safe UI helpers that behave correctly regardless of OS ----------
 
-// Presents a simple two-button confirmation dialog, using UIAlertController
-// on iOS 8+, and UIActionSheet on everything before that. `destructive`
-// controls whether the confirm button is styled as destructive where possible.
+// Presents a simple two-button confirmation dialog via UIActionSheet.
+// `destructive` picks the destructive (red) button slot where the OS
+// supports it. Works identically iOS 3 through iOS 10.
 typedef void (^AIConfirmHandler)(BOOL confirmed);
 void AIPresentConfirm(UIViewController *presenter,
                        NSString *title,
