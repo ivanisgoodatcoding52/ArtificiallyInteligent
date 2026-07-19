@@ -108,21 +108,17 @@ void AIPresentAlert(UIViewController *presenter, NSString *title, NSString *mess
 CGFloat AIHeightForText(NSString *text, UIFont *font, CGFloat width) {
     if (!text.length) return 0;
 
-    if (AIIsIOS7OrLater()) {
-        NSDictionary *attrs = @{ NSFontAttributeName: font };
-        CGRect rect = [text boundingRectWithSize:CGSizeMake(width, CGFLOAT_MAX)
-                                          options:NSStringDrawingUsesLineFragmentOrigin
-                                       attributes:attrs
-                                          context:nil];
-        return ceil(rect.size.height);
-    }
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_7_0
+    // sizeWithFont:constrainedToSize:lineBreakMode: is deprecated starting
+    // iOS 7 (we silence that warning in the Makefile) but remains fully
+    // functional through iOS 10, and — unlike boundingRectWithSize:options:
+    // attributes:context: — is guaranteed to be declared in every SDK this
+    // project builds against, including the older ~6.1 base SDK used for
+    // the armv6/armv7 slices. Using it universally avoids depending on a
+    // struct-returning selector the compiler can't safely stub in when the
+    // SDK headers don't declare it (unlike an unknown selector returning an
+    // object, an unknown struct-returning selector is a hard compile error).
     CGSize size = [text sizeWithFont:font
                     constrainedToSize:CGSizeMake(width, CGFLOAT_MAX)
                         lineBreakMode:NSLineBreakByWordWrapping];
     return ceil(size.height);
-#else
-    return 0;
-#endif
 }

@@ -55,7 +55,9 @@ void AIPresentConfirm(UIViewController *presenter,
 void AIPresentAlert(UIViewController *presenter, NSString *title, NSString *message);
 
 // Computes the height needed to render `text` at `font` within `width`,
-// using boundingRectWithSize: on iOS 7+ and sizeWithFont: before that.
+// via sizeWithFont:constrainedToSize:lineBreakMode: (deprecated but
+// functional through iOS 10, and safely declared on every SDK this project
+// builds against).
 CGFloat AIHeightForText(NSString *text, UIFont *font, CGFloat width);
 
 #endif /* AICompat_h */
