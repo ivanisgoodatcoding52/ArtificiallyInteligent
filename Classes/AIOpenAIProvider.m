@@ -20,8 +20,13 @@
     // Be forgiving: if the user only entered a base host, append the
     // conventional chat completions path.
     NSString *urlString = base;
-    if (![base.lowercaseString containsString:@"/chat/completions"] &&
-        ![base.lowercaseString containsString:@"/v1/"]) {
+    NSString *lowerBase = base.lowercaseString;
+    // containsString: is iOS 8+ only and not declared in this project's base
+    // SDK; rangeOfString: does the same substring check and has existed
+    // since the very first iOS SDKs.
+    BOOL hasCompletionsPath = [lowerBase rangeOfString:@"/chat/completions"].location != NSNotFound;
+    BOOL hasV1Path = [lowerBase rangeOfString:@"/v1/"].location != NSNotFound;
+    if (!hasCompletionsPath && !hasV1Path) {
         if ([urlString hasSuffix:@"/"]) urlString = [urlString substringToIndex:urlString.length - 1];
         urlString = [urlString stringByAppendingString:@"/v1/chat/completions"];
     }

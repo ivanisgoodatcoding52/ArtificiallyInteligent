@@ -44,9 +44,18 @@ static NSString * const kKeyOllamaContextLen   = @"AIOllamaContextLength";
 - (instancetype)init {
     self = [super init];
     if (self) {
-        // Falls back to standardUserDefaults if the named suite can't be
-        // created (sandboxed contexts on some rootless setups).
-        _defaults = [[NSUserDefaults alloc] initWithSuiteName:kAIDefaultsSuite] ?: [NSUserDefaults standardUserDefaults];
+        // initWithSuiteName: (for shared app-group defaults) is iOS 7+ only
+        // and isn't declared in this project's base SDK, so dispatch to it
+        // dynamically rather than referencing it directly (a hard compile
+        // error on this toolchain). Falls back to standardUserDefaults on
+        // iOS 3-6 devices, or if the suite can't be created for any reason.
+        NSUserDefaults *customDefaults = nil;
+        SEL suiteInitSelector = @selector(initWithSuiteName:);
+        if ([NSUserDefaults instancesRespondToSelector:suiteInitSelector]) {
+            NSUserDefaults *allocated = [NSUserDefaults alloc];
+            customDefaults = [allocated performSelector:suiteInitSelector withObject:kAIDefaultsSuite];
+        }
+        _defaults = customDefaults ?: [NSUserDefaults standardUserDefaults];
         [self registerDefaults];
     }
     return self;

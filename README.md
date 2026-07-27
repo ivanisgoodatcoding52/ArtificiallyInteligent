@@ -99,7 +99,7 @@ Theos detects your target automatically based on `THEOS_DEVICE_ROOTLESS` / the t
 ## Compatibility decisions
 
 - **Objective-C + UIKit only, no Swift.** Swift's runtime wasn't viable on iOS 3-6 devices at all, and staying pure Obj-C keeps one code path instead of a bridging layer.
-- **Manual frame layout in `AIMessageCell`, not Auto Layout.** Auto Layout exists from iOS 6 on but is meaningfully slower on ARMv6/early ARMv7 hardware; manual `layoutSubviews` math is cheap and predictable on an iPhone 3GS.
+- **Manual frame layout in `AIMessageCell`, not Auto Layout.** Auto Layout exists from iOS 6 on but is meaningfully slower on early ARMv7 hardware; manual `layoutSubviews` math is cheap and predictable on an iPhone 3GS.
 - **`NSURLSession` when available, `NSURLConnection` delegate-based fallback otherwise** (`AIAPIManager`), since `NSURLSession` doesn't exist before iOS 7.
 - **`NSJSONSerialization` when available (iOS 5+), hand-rolled fallback parser otherwise** (`AIJSONCompat`), since the built-in JSON APIs don't exist on iOS 3-4.
 - **`UIAlertController` on iOS 8+, `UIActionSheet`/`UIAlertView` before that** (`AICompat`'s `AIPresentConfirm`/`AIPresentAlert`), since `UIAlertController` fully deprecates the older classes and using it exclusively would break iOS 3-7.
@@ -107,7 +107,13 @@ Theos detects your target automatically based on `THEOS_DEVICE_ROOTLESS` / the t
 - **Flat-file JSON conversation storage instead of SQLite/CoreData.** Personal chat history at the scale a single device will accumulate doesn't need a database engine; a JSON file keeps the binary smaller and avoids owning a CoreData stack on constrained RAM.
 - **Activator integration is a soft, weakly-linked dependency.** The tweak works standalone (long-press gesture) with zero required dependencies beyond MobileSubstrate/PreferenceLoader; Activator, if present, is detected via `NSClassFromString` and never assumed.
 - **Streaming defaults to off.** True token streaming is straightforward on the `NSURLSession` path but awkward to do well on `NSURLConnection`'s delegate callbacks; defaulting non-streaming keeps behavior identical and predictable across the entire iOS 3-10 range, with streaming available as an opt-in for iOS 7+ devices where it's cheap.
-- **ARMv6 / ARMv7 / ARM64 multi-arch build** via Theos' `ARCHS` so the same package installs correctly on everything from an iPhone 3GS through a 64-bit iPhone 6.
+- **ARMv7-only build with this SDK.** The project targets ARMv7 (covering iPhone 3GS through the plain iPhone 5, iPad 1-4, iPod touch 4/5, and more). ARM64 is not included when building against `iPhoneOS6.1.sdk`, because that SDK predates Apple's arm64 support entirely (added around Xcode 5.0.1 / iOS 7.0.3, months after 6.1 shipped) — its headers have no arm64 definitions at all, which fails deep inside system headers before any of this project's own code is reached, and can't be worked around from the source side. **Practical consequence:** on 64-bit-only host processes (SpringBoard on iPhone 5s, iPhone 6, and later, all of which run natively as arm64), an armv7-only dylib cannot be injected at all, so this build as-is won't activate on those specific devices even though the OS itself still runs older armv7 apps. To restore arm64 support, install a newer SDK (iOS 7+) from the community [theos/sdks](https://github.com/theos/sdks) repo into `$THEOS/sdks`, then split `THEOS_DEVICE_TARGETS` per architecture, e.g.:
+  ```
+  THEOS_DEVICE_TARGETS = iphone:clang:6.1:3.0 iphone:clang:9.3:7.0
+  ARCHS = armv7
+  ARCHS_iphone:clang:9.3:7.0 = arm64
+  ```
+  so armv7 keeps building against 6.1 while arm64 builds against the newer SDK, giving you one package that covers both.
 
 ## Notes / things to double check before shipping
 

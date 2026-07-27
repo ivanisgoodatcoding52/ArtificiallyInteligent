@@ -5,6 +5,7 @@
 
 #import "AIMessageCell.h"
 #import "AICompat.h"
+#import <QuartzCore/QuartzCore.h>
 
 NSString * const AIMessageCellReuseIdentifier = @"AIMessageCell";
 

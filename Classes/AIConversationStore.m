@@ -51,7 +51,7 @@
 
 - (NSString *)storageDirectory {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-    NSString *appSupport = paths.firstObject ?: NSTemporaryDirectory();
+    NSString *appSupport = (paths.count > 0) ? paths[0] : NSTemporaryDirectory();
     NSString *dir = [appSupport stringByAppendingPathComponent:@"ArtificiallyInteligent"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:dir]) {
         [[NSFileManager defaultManager] createDirectoryAtPath:dir withIntermediateDirectories:YES attributes:nil error:nil];

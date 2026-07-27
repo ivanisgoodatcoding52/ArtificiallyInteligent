@@ -81,8 +81,12 @@ static NSString * const kLoadingCellIdentifier = @"AILoadingCell";
 
     self.inputBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds) - self.inputBarHeight, width, self.inputBarHeight)];
     self.inputBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    if (AIIsIOS7OrLater()) {
-        self.inputBar.barTintColor = [UIColor whiteColor];
+    // barTintColor is an iOS7+ property not declared in this project's base
+    // SDK (~6.1). It genuinely exists at runtime on iOS7+ devices though, so
+    // dispatch to it dynamically rather than referencing the undeclared
+    // property directly (which is a hard compile error, not a warning).
+    if ([self.inputBar respondsToSelector:@selector(setBarTintColor:)]) {
+        [self.inputBar performSelector:@selector(setBarTintColor:) withObject:[UIColor whiteColor]];
     }
 
     self.inputField = [[UITextField alloc] initWithFrame:CGRectMake(8, 6, width - 80, 32)];
@@ -93,7 +97,12 @@ static NSString * const kLoadingCellIdentifier = @"AILoadingCell";
     self.inputField.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.inputBar addSubview:self.inputField];
 
-    self.sendButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    // UIButtonTypeSystem is the iOS7+ name for the same enum raw value as
+    // the pre-iOS7 UIButtonTypeRoundedRect (this SDK doesn't declare the
+    // newer name). Using the older name compiles everywhere and renders
+    // correctly either way, since the actual look is decided by the device's
+    // running OS, not by which symbolic name we used at compile time.
+    self.sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.sendButton.frame = CGRectMake(width - 64, 6, 56, 32);
     [self.sendButton setTitle:@"Send" forState:UIControlStateNormal];
     self.sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
@@ -175,7 +184,15 @@ static NSString * const kLoadingCellIdentifier = @"AILoadingCell";
     [self scrollToBottomAnimated:YES];
 
     NSArray *history = [self apiFormattedHistory];
-    __weak typeof(self) weakSelf = self;
+    // __weak requires iOS 5+ (ARC's weak-reference runtime support), which
+    // isn't available at this project's iOS 3.0 deployment target -- using
+    // it is a hard compile error there, not just a warning. __unsafe_unretained
+    // is the standard substitute for targets this old: it doesn't auto-nil if
+    // the object is deallocated mid-flight, but in practice this view
+    // controller is retained by its navigation controller for the lifetime of
+    // any single network request, so the window for a dangling pointer here
+    // is effectively nil.
+    __unsafe_unretained typeof(self) weakSelf = self;
     [[AIAPIManager sharedManager] sendMessages:history completion:^(NSString *replyText, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;

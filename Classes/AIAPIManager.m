@@ -12,6 +12,8 @@
 #import "AIVoidAIProvider.h"
 #import "AIGenericProvider.h"
 #import <SystemConfiguration/SystemConfiguration.h>
+#import <sys/socket.h>
+#import <netinet/in.h>
 
 // Delegate-based fallback connection object for pre-iOS 7 devices where
 // NSURLSession does not exist. Accumulates data and reports back via block.
@@ -130,10 +132,24 @@
         Class configClass = NSClassFromString(@"NSURLSessionConfiguration");
         id configuration = configClass ? [configClass performSelector:@selector(defaultSessionConfiguration)] : nil;
         id session = [sessionClass performSelector:@selector(sessionWithConfiguration:) withObject:configuration];
-        id task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+
+        // dataTaskWithRequest:completionHandler: isn't declared anywhere in
+        // this project's base SDK (~6.1 for the armv6/armv7 slices), so a
+        // direct message send is a hard compile error here ("no known
+        // instance method"), not just a warning. performSelector:withObject:
+        // withObject: is declared on NSObject itself with two plain id
+        // parameters, so it type-checks regardless of whether the target
+        // selector is known -- the block argument passes through fine since
+        // blocks are ordinary Objective-C objects under ARC.
+        SEL dataTaskSelector = @selector(dataTaskWithRequest:completionHandler:);
+        id completionBlock = ^(NSData *data, NSURLResponse *response, NSError *error) {
             handleResult(data, response, error);
-        }];
-        [task resume];
+        };
+        id task = [session performSelector:dataTaskSelector withObject:request withObject:completionBlock];
+
+        if ([task respondsToSelector:@selector(resume)]) {
+            [task performSelector:@selector(resume)];
+        }
         self.modernTask = task;
     } else {
         AILegacyConnectionHandler *handler = [[AILegacyConnectionHandler alloc] init];

@@ -14,6 +14,29 @@
 #import <UIKit/UIKit.h>
 #import "Classes/AIChatViewController.h"
 
+// Forward interface declarations for the three small helper classes defined
+// later in this file. Objective-C requires a class's methods to be declared
+// before they're referenced, and each of these is first used earlier in the
+// file (in AIPresentChat, the Activator %ctor block, and the SpringBoard
+// hook) than where its @implementation naturally sits alongside the code
+// it's most related to.
+
+// Tiny helper object so the close button has a valid target/action pair
+// without introducing a full extra class file for one method.
+@interface AIChatDismisser : NSObject
++ (instancetype)sharedDismisser;
+- (void)dismiss;
+@end
+
+@interface AIActivatorListener : NSObject
++ (instancetype)sharedListener;
+@end
+
+@interface AIChatLauncher : NSObject
++ (instancetype)sharedLauncher;
+- (void)handleLongPress:(UILongPressGestureRecognizer *)recognizer;
+@end
+
 static UIWindow *gAIOverlayWindow = nil;
 
 static void AIPresentChat(void) {
@@ -45,13 +68,6 @@ static void AIPresentChat(void) {
     [gAIOverlayWindow makeKeyAndVisible];
 }
 
-// Tiny helper object so the close button has a valid target/action pair
-// without introducing a full extra class file for one method.
-@interface AIChatDismisser : NSObject
-+ (instancetype)sharedDismisser;
-- (void)dismiss;
-@end
-
 @implementation AIChatDismisser
 
 + (instancetype)sharedDismisser {
@@ -81,8 +97,16 @@ static void AIPresentChat(void) {
         if (activatorClass && eventClass) {
             static NSString * const kActivatorListenerName = @"com.yourname.artificiallyinteligent.open";
 
-            id activator = [activatorClass sharedInstance];
-            if ([activator respondsToSelector:@selector(registerListener:forName:)]) {
+            // sharedInstance isn't declared anywhere in this compilation
+            // unit (libactivator's headers aren't imported), so a direct
+            // message send is a hard compile error in this toolchain, not
+            // just a warning. Dispatch dynamically instead.
+            id activator = nil;
+            if ([activatorClass respondsToSelector:@selector(sharedInstance)]) {
+                activator = [activatorClass performSelector:@selector(sharedInstance)];
+            }
+
+            if (activator && [activator respondsToSelector:@selector(registerListener:forName:)]) {
                 // Register a lightweight block-based listener wrapper.
                 // LAListener is a protocol; we satisfy it with a tiny inline object.
                 [activator performSelector:@selector(registerListener:forName:)
@@ -92,10 +116,6 @@ static void AIPresentChat(void) {
         }
     }
 }
-
-@interface AIActivatorListener : NSObject
-+ (instancetype)sharedListener;
-@end
 
 @implementation AIActivatorListener
 
@@ -142,11 +162,6 @@ static void AIPresentChat(void) {
 }
 
 %end
-
-@interface AIChatLauncher : NSObject
-+ (instancetype)sharedLauncher;
-- (void)handleLongPress:(UILongPressGestureRecognizer *)recognizer;
-@end
 
 @implementation AIChatLauncher
 

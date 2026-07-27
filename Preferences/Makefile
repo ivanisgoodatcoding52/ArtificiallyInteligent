@@ -1,5 +1,7 @@
-ARCHS = armv6 armv7 arm64
+ARCHS = armv7
 TARGET = iphone:clang:latest:3.0
+# See the main Makefile for why arm64 is omitted (iPhoneOS6.1.sdk predates
+# Apple's arm64 support entirely).
 
 include $(THEOS)/makefiles/common.mk
 
