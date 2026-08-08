@@ -1,7 +1,21 @@
+BUILD_ARCH ?= armv7
+
+ifeq ($(BUILD_ARCH),armv6)
+ARCHS = armv6
+TARGET = iphone:clang:4.3:3.0
+else ifeq ($(BUILD_ARCH),arm64)
+ARCHS = arm64
+TARGET = iphone:clang:latest:7.0
+else ifeq ($(BUILD_ARCH),modern)
+ARCHS = armv7 arm64
+TARGET = iphone:clang:latest:7.0
+else
 ARCHS = armv7
 TARGET = iphone:clang:latest:3.0
-# See the main Makefile for why arm64 is omitted (iPhoneOS6.1.sdk predates
-# Apple's arm64 support entirely).
+endif
+# See the main Makefile for the full explanation of the four build tiers
+# and which SDK each one requires. The Settings.app pane itself (this
+# subproject) needs no code changes across tiers - only arch/SDK selection.
 
 include $(THEOS)/makefiles/common.mk
 
