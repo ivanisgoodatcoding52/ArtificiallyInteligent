@@ -12,7 +12,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Classes/AIChatViewController.h"
+#import "AIChatViewController.h"
 
 // Forward interface declarations for the three small helper classes defined
 // later in this file. Objective-C requires a class's methods to be declared
