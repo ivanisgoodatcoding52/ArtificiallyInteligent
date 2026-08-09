@@ -67,12 +67,7 @@ TARGET = iphone:clang:latest:7.0
 else
 ARCHS = armv7
 TARGET = iphone:clang:latest:3.0
-<<<<<<< HEAD
-
-THEOS_DEVICE_TARGETS = iphone:clang:10.0:3.0
-=======
 endif
->>>>>>> 24f9706 (fixed 6)
 
 include $(THEOS)/makefiles/common.mk
 

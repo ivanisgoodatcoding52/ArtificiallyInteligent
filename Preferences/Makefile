@@ -25,6 +25,11 @@ ArtificiallyInteligentPrefs_FILES = AIPrefsRootListController.m
 ArtificiallyInteligentPrefs_INSTALL_PATH = /Library/PreferenceBundles
 ArtificiallyInteligentPrefs_FRAMEWORKS = UIKit Foundation
 ArtificiallyInteligentPrefs_PRIVATE_FRAMEWORKS = Preferences
+# Root.plist (specifiers), Info.plist (bundle metadata / NSPrincipalClass),
+# and Icon.png all live in Resources/ - without this, none of them actually
+# get copied into the built .bundle, which is why the Settings pane showed
+# up blank: loadSpecifiersFromPlistName:@"Root" had no Root.plist to find.
+ArtificiallyInteligentPrefs_RESOURCE_DIRS = Resources
 
 include $(THEOS_MAKE_PATH)/bundle.mk
 

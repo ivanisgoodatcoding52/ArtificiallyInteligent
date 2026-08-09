@@ -34,6 +34,7 @@
 
 @interface AIChatLauncher : NSObject
 + (instancetype)sharedLauncher;
++ (void)attachGestureWithRetriesRemaining:(NSInteger)retriesRemaining;
 - (void)handleLongPress:(UILongPressGestureRecognizer *)recognizer;
 @end
 
@@ -153,12 +154,15 @@ static void AIPresentChat(void) {
 
 - (void)applicationDidFinishLaunching:(id)application {
     %orig;
-
-    UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]
-        initWithTarget:[AIChatLauncher sharedLauncher] action:@selector(handleLongPress:)];
-    longPress.minimumPressDuration = 1.2;
-    [keyWindow addGestureRecognizer:longPress];
+    // keyWindow is frequently not established yet at this exact point in
+    // SpringBoard's launch sequence - grabbing it immediately here can
+    // silently attach the gesture recognizer to nil (a no-op under
+    // Objective-C's message-to-nil semantics, not a crash), which means the
+    // long-press trigger simply never works with no visible error. Deferring
+    // to the next runloop turn, with a few retries in case it's still not
+    // ready, is the standard fix for this class of "attach to SpringBoard's
+    // window during launch" timing issue.
+    [AIChatLauncher attachGestureWithRetriesRemaining:5];
 }
 
 %end
@@ -172,6 +176,26 @@ static void AIPresentChat(void) {
         shared = [[AIChatLauncher alloc] init];
     });
     return shared;
+}
+
++ (void)attachGestureWithRetriesRemaining:(NSInteger)retriesRemaining {
+    static BOOL alreadyAttached = NO;
+    if (alreadyAttached) return;
+
+    UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+    if (!keyWindow) {
+        if (retriesRemaining <= 0) return; // give up quietly rather than loop forever
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self attachGestureWithRetriesRemaining:retriesRemaining - 1];
+        });
+        return;
+    }
+
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]
+        initWithTarget:[AIChatLauncher sharedLauncher] action:@selector(handleLongPress:)];
+    longPress.minimumPressDuration = 1.2;
+    [keyWindow addGestureRecognizer:longPress];
+    alreadyAttached = YES;
 }
 
 - (void)handleLongPress:(UILongPressGestureRecognizer *)recognizer {
