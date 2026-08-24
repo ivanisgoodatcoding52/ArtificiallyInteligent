@@ -185,7 +185,7 @@ static NSString * const kLoadingCellIdentifier = @"AILoadingCell";
 
     NSArray *history = [self apiFormattedHistory];
     // __weak requires iOS 5+ (ARC's weak-reference runtime support), which
-    // isn't available at this project's iOS 3.0 deployment target -- using
+    // isn't available at this project's iOS 4.0 deployment target -- using
     // it is a hard compile error there, not just a warning. __unsafe_unretained
     // is the standard substitute for targets this old: it doesn't auto-nil if
     // the object is deallocated mid-flight, but in practice this view
@@ -276,7 +276,7 @@ static NSString * const kLoadingCellIdentifier = @"AILoadingCell";
 }
 
 // Long-press-to-copy support, standard pattern since UITableView gained
-// native menu support (iOS 5+). On iOS 3-4 this silently has no effect,
+// native menu support (iOS 5+). On iOS 4 this silently has no effect,
 // which is an acceptable degradation for a "copy message" convenience.
 - (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
     return indexPath.row < (NSInteger)[AIConversationStore sharedStore].currentMessages.count;

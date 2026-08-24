@@ -62,7 +62,7 @@ static const CGFloat kBubbleVerticalMargin = 6.0;
 
     if (isUser) {
         // Blue bubble, white text - matches the familiar Messages.app "you" bubble
-        // across every design era from iOS 3's glossier blue through iOS 7+'s flat blue.
+        // across every design era from iOS 4-6's glossier blue through iOS 7+'s flat blue.
         self.bubbleView.backgroundColor = [UIColor colorWithRed:0.0 green:0.48 blue:1.0 alpha:1.0];
         self.contentLabel.textColor = [UIColor whiteColor];
     } else {

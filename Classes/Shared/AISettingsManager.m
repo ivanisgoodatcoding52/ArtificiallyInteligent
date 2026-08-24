@@ -48,7 +48,7 @@ static NSString * const kKeyOllamaContextLen   = @"AIOllamaContextLength";
         // and isn't declared in this project's base SDK, so dispatch to it
         // dynamically rather than referencing it directly (a hard compile
         // error on this toolchain). Falls back to standardUserDefaults on
-        // iOS 3-6 devices, or if the suite can't be created for any reason.
+        // iOS 4-6 devices, or if the suite can't be created for any reason.
         NSUserDefaults *customDefaults = nil;
         SEL suiteInitSelector = @selector(initWithSuiteName:);
         if ([NSUserDefaults instancesRespondToSelector:suiteInitSelector]) {

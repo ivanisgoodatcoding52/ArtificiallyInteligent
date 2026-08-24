@@ -86,7 +86,7 @@ static void AIPresentChat(void) {
 
 @end
 
-#pragma mark - Activator integration (soft dependency, iOS 3+)
+#pragma mark - Activator integration (soft dependency, iOS 4+)
 
 // If libactivator is present, register a listener so the user can bind any
 // gesture (e.g. status bar swipe) to opening the chat UI. If it's absent,

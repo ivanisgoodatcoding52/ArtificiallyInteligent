@@ -2,9 +2,9 @@ Package: com.yourname.artificiallyinteligent
 Name: Artificially Inteligent
 Version: 1.0.0
 Architecture: iphoneos-arm
-Description: A lightweight AI chatbot client for legacy jailbroken iOS devices (iOS 3.0+). Connect to OpenAI-compatible APIs, Ollama, VoidAI, or custom providers.
+Description: A lightweight AI chatbot client for legacy jailbroken iOS devices (iOS 4.0+). Connect to OpenAI-compatible APIs, Ollama, VoidAI, or custom providers.
 Maintainer: Your Name
 Author: Your Name
 Section: Tweaks
-Depends: mobilesubstrate | com.saurik.substrate.safemode, firmware (>= 3.0), preferenceloader
+Depends: mobilesubstrate | com.saurik.substrate.safemode, firmware (>= 4.0), preferenceloader
 Homepage: https://example.com/artificiallyinteligent

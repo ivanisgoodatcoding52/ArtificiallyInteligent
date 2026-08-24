@@ -4,8 +4,12 @@
 //
 //  Central place for legacy/modern iOS compatibility helpers.
 //  Every class that needs to branch behavior by OS version, or safely probe
-//  for a class/selector that may not exist on iOS 3-6, should go through here
+//  for a class/selector that may not exist on iOS 4-6, should go through here
 //  instead of sprinkling raw NSClassFromString calls everywhere.
+//  Floor is iOS 4.0, not iOS 3.0 - this codebase's pervasive use of blocks
+//  and Grand Central Dispatch (dispatch_once, dispatch_async, block-based
+//  completion handlers) requires it, since neither exists at all below
+//  iOS 4.0. See the Makefile for the full explanation.
 //
 
 #ifndef AICompat_h
@@ -42,7 +46,7 @@ BOOL AIIsArm64(void);
 
 // Presents a simple two-button confirmation dialog via UIActionSheet.
 // `destructive` picks the destructive (red) button slot where the OS
-// supports it. Works identically iOS 3 through iOS 10.
+// supports it. Works identically iOS 4 through iOS 10.
 typedef void (^AIConfirmHandler)(BOOL confirmed);
 void AIPresentConfirm(UIViewController *presenter,
                        NSString *title,
