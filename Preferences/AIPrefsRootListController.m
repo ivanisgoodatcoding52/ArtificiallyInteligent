@@ -37,7 +37,7 @@
         SEL suiteInitSelector = @selector(initWithSuiteName:);
         if ([NSUserDefaults instancesRespondToSelector:suiteInitSelector]) {
             NSUserDefaults *allocated = [NSUserDefaults alloc];
-            defaults = [allocated performSelector:suiteInitSelector withObject:@"com.yourname.artificiallyinteligent"];
+            defaults = [allocated performSelector:suiteInitSelector withObject:@"com.rg.artificiallyinteligient"];
         }
         defaults = defaults ?: [NSUserDefaults standardUserDefaults];
 

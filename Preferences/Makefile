@@ -14,7 +14,7 @@ ARCHS = armv7 arm64
 TARGET = iphone:clang:latest:7.0
 else
 ARCHS = armv7
-TARGET = iphone:clang:latest:4.0
+TARGET = iphone:clang:6.1:4.0
 endif
 # See the main Makefile for the full explanation of the five build tiers
 # and which SDK each one requires. The Settings.app pane itself (this

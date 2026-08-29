@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>Artificially Inteligent</string>
+	<key>CFBundleName</key>
+	<string>ArtificiallyInteligent</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.rg.artificiallyinteligient.app</string>
+	<key>CFBundleExecutable</key>
+	<string>ArtificiallyInteligentApp</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>CFBundleIconFiles</key>
+	<array>
+		<string>Icon.png</string>
+		<string>Icon@2x.png</string>
+		<string>Icon-72.png</string>
+		<string>Icon-Flat.png</string>
+		<string>Icon-Flat@2x.png</string>
+		<string>Icon-Flat-72@2x.png</string>
+	</array>
+	<!-- Lets other apps, Shortcuts, or a tapped link launch straight into a
+	     chat turn: artificiallyinteligent://ask?text=<url-encoded message> -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.rg.artificiallyinteligient.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>artificiallyinteligent</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

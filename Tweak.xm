@@ -13,6 +13,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AIChatViewController.h"
+#import "AIExternalBridge.h"
 
 // Forward interface declarations for the three small helper classes defined
 // later in this file. Objective-C requires a class's methods to be declared
@@ -93,10 +94,12 @@ static void AIPresentChat(void) {
 // this whole block is skipped safely.
 %ctor {
     @autoreleasepool {
+        [AIExternalBridge startListening];
+
         Class activatorClass = NSClassFromString(@"LAActivator");
         Class eventClass = NSClassFromString(@"LAEvent");
         if (activatorClass && eventClass) {
-            static NSString * const kActivatorListenerName = @"com.yourname.artificiallyinteligent.open";
+            static NSString * const kActivatorListenerName = @"com.rg.artificiallyinteligient.open";
 
             // sharedInstance isn't declared anywhere in this compilation
             // unit (libactivator's headers aren't imported), so a direct

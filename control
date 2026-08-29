@@ -1,8 +1,8 @@
-Package: com.yourname.artificiallyinteligent
+Package: com.rg.artificiallyinteligient
 Name: Artificially Inteligent
 Version: 1.0.0
 Architecture: iphoneos-arm
-Description: A lightweight AI chatbot client for legacy jailbroken iOS devices (iOS 4.0+). Connect to OpenAI-compatible APIs, Ollama, VoidAI, or custom providers.
+Description: A lightweight AI chatbot client for legacy jailbroken iOS devices (iOS 4.0+). Includes a SpringBoard long-press overlay, a Settings.app pane, and a standalone app (with a artificiallyinteligent:// URL scheme and a cross-tweak Darwin-notification API for other tweaks to call into). Connect to OpenAI-compatible APIs, Ollama, VoidAI, or custom providers.
 Maintainer: Your Name
 Author: Your Name
 Section: Tweaks

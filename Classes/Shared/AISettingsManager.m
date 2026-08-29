@@ -7,7 +7,7 @@
 
 NSString * const AISettingsDidChangeNotification = @"AISettingsDidChangeNotification";
 
-static NSString * const kAIDefaultsSuite       = @"com.yourname.artificiallyinteligent";
+static NSString * const kAIDefaultsSuite       = @"com.rg.artificiallyinteligient";
 
 static NSString * const kKeyProviderType       = @"AIActiveProviderType";
 static NSString * const kKeyAPIURL             = @"AIApiURL";

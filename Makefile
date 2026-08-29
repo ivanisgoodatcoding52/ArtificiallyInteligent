@@ -108,7 +108,7 @@ ARCHS = armv7 arm64
 TARGET = iphone:clang:latest:7.0
 else
 ARCHS = armv7
-TARGET = iphone:clang:latest:4.0
+TARGET = iphone:clang:6.1:4.0
 endif
 
 include $(THEOS)/makefiles/common.mk
@@ -128,7 +128,8 @@ ArtificiallyInteligent_FILES = Tweak.xm \
 	Classes/Shared/AIVoidAIProvider.m \
 	Classes/Shared/AIGenericProvider.m \
 	Classes/Shared/AISettingsManager.m \
-	Classes/Shared/AIConversationStore.m
+	Classes/Shared/AIConversationStore.m \
+	Classes/Shared/AIExternalBridge.m
 
 # UI + compat-shim classes genuinely differ: the "modern" tier gets the
 # from-scratch iOS7+ redesign in Classes/Modern, every other tier gets the
@@ -143,7 +144,7 @@ ArtificiallyInteligent_FILES += Classes/Legacy/AICompat.m Classes/Legacy/AIChatV
 ArtificiallyInteligent_CFLAGS = -IClasses/Legacy -IClasses/Shared -fobjc-arc -Wno-deprecated-declarations -Wno-arc-performSelector-leaks
 endif
 
-ArtificiallyInteligent_FRAMEWORKS = UIKit Foundation CoreGraphics SystemConfiguration QuartzCore
+ArtificiallyInteligent_FRAMEWORKS = UIKit Foundation CoreGraphics CoreFoundation SystemConfiguration QuartzCore
 ArtificiallyInteligent_WEAK_FRAMEWORKS = AVFoundation Security
 
 include $(THEOS_MAKE_PATH)/tweak.mk
@@ -151,5 +152,5 @@ include $(THEOS_MAKE_PATH)/tweak.mk
 after-install::
 	install.exec "killall -9 SpringBoard"
 
-SUBPROJECTS += Preferences
+SUBPROJECTS += Preferences App
 include $(THEOS_MAKE_PATH)/aggregate.mk

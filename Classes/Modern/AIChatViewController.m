@@ -182,6 +182,12 @@ static NSString * const kLoadingCellIdentifier = @"AILoadingCell";
 
 #pragma mark - Sending
 
+- (void)sendPresetMessage:(NSString *)text {
+    if (text.length == 0) return;
+    self.inputField.text = text;
+    [self sendButtonTapped];
+}
+
 - (void)sendButtonTapped {
     NSString *text = [self.inputField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (text.length == 0 || self.isWaitingForReply) return;
