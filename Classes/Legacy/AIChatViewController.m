@@ -249,7 +249,10 @@ static NSString * const kLoadingCellIdentifier = @"AILoadingCell";
             loadingCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kLoadingCellIdentifier];
             loadingCell.selectionStyle = UITableViewCellSelectionStyleNone;
             loadingCell.backgroundColor = [UIColor clearColor];
-            UIActivityIndicatorViewStyle style = AIIsIOS7OrLater() ? UIActivityIndicatorViewStyleGray : UIActivityIndicatorViewStyleGray;
+            // Both tiers use a light table background (white on iOS7+, light
+            // gray pre-iOS7 - see viewDidLoad), so Gray is correct either way.
+            // This used to be a no-op ternary that always evaluated to Gray.
+            UIActivityIndicatorViewStyle style = UIActivityIndicatorViewStyleGray;
             UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:style];
             spinner.tag = 999;
             spinner.frame = CGRectMake(16, 8, 20, 20);

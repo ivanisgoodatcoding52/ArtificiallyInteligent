@@ -17,6 +17,14 @@
     AISettingsManager *settings = [AISettingsManager sharedManager];
 
     NSString *base = settings.apiURL ?: @"";
+    // An empty base would otherwise silently produce the relative URL
+    // "/api/chat", which NSURL parses as non-nil - so AIAPIManager's "not
+    // configured" guard (which only checks for a nil request) never fires,
+    // and the request instead fails later with an opaque network error.
+    // Bail out here with the same nil-request contract the other providers
+    // use so the friendly "Provider is not configured" message shows instead.
+    if (base.length == 0) return nil;
+
     if ([base hasSuffix:@"/"]) base = [base substringToIndex:base.length - 1];
     // Use /api/chat so multi-turn history is preserved server-side; this is
     // the modern Ollama endpoint and works the same on LAN servers.

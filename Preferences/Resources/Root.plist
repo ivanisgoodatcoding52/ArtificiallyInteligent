@@ -4,6 +4,8 @@
 <dict>
 	<key>title</key>
 	<string>Artificially Inteligent</string>
+	<key>defaults</key>
+	<string>com.rg.artificiallyinteligient</string>
 	<key>specifiers</key>
 	<array>
 

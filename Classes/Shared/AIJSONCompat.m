@@ -157,6 +157,28 @@
         char c = _bytes[_index];
         if (c == '\\' && _index + 1 < _length) {
             char next = _bytes[_index + 1];
+            if (next == 'u' && _index + 5 < _length) {
+                // \uXXXX - four hex digits giving a UTF-16 code unit. This was
+                // previously falling through to the `default` case below,
+                // which appended a literal 'u' followed by the four hex
+                // digits as plain text instead of decoding them - so any AI
+                // reply containing an escaped emoji, accented character, or
+                // control character came out garbled on devices old enough
+                // to need this parser (iOS 4.0-4.2, before NSJSONSerialization).
+                unsigned int codepoint = 0;
+                for (NSUInteger i = 0; i < 4; i++) {
+                    char h = _bytes[_index + 2 + i];
+                    unsigned int digit = 0;
+                    if (h >= '0' && h <= '9') digit = (unsigned int)(h - '0');
+                    else if (h >= 'a' && h <= 'f') digit = (unsigned int)(h - 'a' + 10);
+                    else if (h >= 'A' && h <= 'F') digit = (unsigned int)(h - 'A' + 10);
+                    codepoint = (codepoint << 4) | digit;
+                }
+                unichar unit = (unichar)codepoint;
+                [result appendString:[NSString stringWithCharacters:&unit length:1]];
+                _index += 6;
+                continue;
+            }
             switch (next) {
                 case 'n': [result appendString:@"\n"]; break;
                 case 't': [result appendString:@"\t"]; break;
