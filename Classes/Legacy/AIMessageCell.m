@@ -80,8 +80,22 @@ static const CGFloat kBubbleVerticalMargin = 6.0;
 
     CGFloat tableWidth = CGRectGetWidth(self.contentView.bounds);
     CGFloat maxBubbleWidth = tableWidth * kBubbleMaxWidthRatio;
-    CGFloat textWidth = maxBubbleWidth - (kBubblePaddingH * 2);
-    CGFloat textHeight = AIHeightForText(self.rawContent, [AIMessageCell bubbleFont], textWidth);
+    CGFloat maxTextWidth = maxBubbleWidth - (kBubblePaddingH * 2);
+
+    // Measure the text's actual wrapped size (up to the max width) instead
+    // of always using the max width itself. sizeWithFont:constrainedToSize:
+    // returns the size the wrapped text actually occupies, not just the
+    // constraint passed in, so a short reply like "Hi" gets a tight bubble
+    // instead of the same fixed 72%-of-table-width box padded with empty
+    // space that every message - short or long - previously rendered at.
+    // The Modern (iOS 7+) tier already gets this for free from Auto Layout
+    // content-hugging; this brings the Legacy manual-frame tier in line.
+    NSString *content = self.rawContent ?: @"";
+    CGSize measured = [content sizeWithFont:[AIMessageCell bubbleFont]
+                           constrainedToSize:CGSizeMake(maxTextWidth, CGFLOAT_MAX)
+                               lineBreakMode:NSLineBreakByWordWrapping];
+    CGFloat textWidth = ceil(measured.width);
+    CGFloat textHeight = ceil(measured.height);
 
     CGFloat bubbleWidth = textWidth + (kBubblePaddingH * 2);
     CGFloat bubbleHeight = textHeight + (kBubblePaddingV * 2);
